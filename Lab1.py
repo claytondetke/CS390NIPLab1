@@ -75,7 +75,7 @@ def buildTFNeuralNet(x, y, eps = 6):
     return model
 
 
-def buildTFConvNet(x, y, eps = 10, dropout = True, dropRate = 0.3):
+def buildTFConvNet(x, y, eps = 11, dropout = True, dropRate = 0.3):
     model = keras.models.Sequential()
     inShape = (IH, IW, IZ)
     lossType = keras.losses.categorical_crossentropy
