@@ -15,14 +15,14 @@ tf.logging.set_verbosity(tf.logging.ERROR)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 #ALGORITHM = "guesser"
-ALGORITHM = "tf_net"
-#ALGORITHM = "tf_conv"
+#ALGORITHM = "tf_net"
+ALGORITHM = "tf_conv"
 
 #DATASET = "mnist_d"
 #DATASET = "mnist_f"
 #DATASET = "cifar_10"
-#DATASET = "cifar_100_f"
-DATASET = "cifar_100_c"
+DATASET = "cifar_100_f"
+#DATASET = "cifar_100_c"
 
 if DATASET == "mnist_d":
     NUM_CLASSES = 10
@@ -75,7 +75,7 @@ def buildTFNeuralNet(x, y, eps = 6):
     return model
 
 
-def buildTFConvNet(x, y, eps = 50, dropout = True, dropRate = 0.3):
+def buildTFConvNet(x, y, eps = 10, dropout = True, dropRate = 0.3):
     model = keras.models.Sequential()
     inShape = (IH, IW, IZ)
     lossType = keras.losses.categorical_crossentropy
@@ -85,10 +85,10 @@ def buildTFConvNet(x, y, eps = 50, dropout = True, dropRate = 0.3):
     if dropout:
         model.add(keras.layers.Dropout(dropRate))
     model.add(keras.layers.Flatten())
-    model.add(keras.layers.Dense(512, activation=tf.nn.relu))
+    model.add(keras.layers.Dense(1024, activation=tf.nn.relu))
     if dropout:
         model.add(keras.layers.Dropout(dropRate))
-    model.add(keras.layers.Dense(256, activation=tf.nn.relu))
+    model.add(keras.layers.Dense(1024, activation=tf.nn.relu))
     model.add(keras.layers.Dense(NUM_CLASSES, activation=tf.nn.softmax))
     model.compile(optimizer = 'adam', loss = lossType, metrics=['accuracy'])
     model.fit(x, y, epochs = eps, batch_size = 100)
