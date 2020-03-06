@@ -20,8 +20,8 @@ ALGORITHM = "tf_conv"
 
 #DATASET = "mnist_d"
 #DATASET = "mnist_f"
-DATASET = "cifar_10"
-#DATASET = "cifar_100_f"
+#DATASET = "cifar_10"
+DATASET = "cifar_100_f"
 #DATASET = "cifar_100_c"
 
 if DATASET == "mnist_d":
@@ -75,20 +75,29 @@ def buildTFNeuralNet(x, y, eps = 6):
     return model
 
 
-def buildTFConvNet(x, y, eps = 6, dropout = True, dropRate = 0.2):
+def buildTFConvNet(x, y, eps = 50, dropout = True, dropRate = 0.4):
     model = keras.models.Sequential()
     inShape = (IH, IW, IZ)
     lossType = keras.losses.categorical_crossentropy
-    model.add(keras.layers.Conv2D(64, kernel_size=(3,3), activation=tf.nn.relu, input_shape=inShape))
+    model.add(keras.layers.Conv2D(32, kernel_size=(3,3), activation=tf.nn.relu, input_shape=inShape))
     model.add(keras.layers.Conv2D(64, kernel_size=(3,3), activation=tf.nn.relu))
+    model.add(keras.layers.MaxPooling2D(pool_size=(3,3)))
+    model.add(keras.layers.Conv2D(128, kernel_size=(3,3), activation=tf.nn.relu, input_shape=inShape))
+    model.add(keras.layers.Conv2D(256, kernel_size=(3,3), activation=tf.nn.relu))
     model.add(keras.layers.MaxPooling2D(pool_size=(3,3)))
     if dropout:
         model.add(keras.layers.Dropout(dropRate))
     model.add(keras.layers.Flatten())
-    model.add(keras.layers.Dense(1024, activation=tf.nn.relu))
+    model.add(keras.layers.Dense(512, activation=tf.nn.relu))
+    if dropout:
+        model.add(keras.layers.Dropout(dropRate))
+    model.add(keras.layers.Dense(512, activation=tf.nn.relu))
+    if dropout:
+        model.add(keras.layers.Dropout(dropRate))
+    model.add(keras.layers.Dense(256, activation=tf.nn.relu))
     model.add(keras.layers.Dense(NUM_CLASSES, activation=tf.nn.softmax))
     model.compile(optimizer = 'adam', loss = lossType, metrics=['accuracy'])
-    model.fit(x, y, epochs = eps)
+    model.fit(x, y, epochs = eps, batch_size = 100)
     return model
 
 #=========================<Pipeline Functions>==================================
